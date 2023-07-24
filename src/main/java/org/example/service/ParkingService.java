@@ -7,12 +7,15 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 
 public class ParkingService {
+  String dateTime = LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss"));
   public void carEntrance(Parking parking) {
-    String sql = "INSERT INTO tb_estacionamento (carroid, entrada, saida, valorpago, permanencia)" +
-        "VALUES ('" + parking.getCar_id() + "', '" + LocalTime.now() +
-        "', '" + (LocalTime.now().plusHours(0)) + "', '" + parking.getAmountPaid() + "', '" + parking.getPermanence() +
+
+    String sql = "INSERT INTO tb_estacionamento (carroid, entrada, valorpago, permanencia)" +
+        "VALUES ('" + parking.getCar_id() + "', '" +  dateTime +
+        "', '" + parking.getAmountPaid() + "', '" + parking.getPermanence() +
         "')";
     try {
       Statement statement = ConnectionDb.getConnection().createStatement();
@@ -58,8 +61,7 @@ public class ParkingService {
 
   public void carDeparture(Integer id) {
     String sql =
-        "UPDATE tb_estacionamento SET saida = '" + LocalTime.now() + "' WHERE " +
-            "id = " + id;
+        "UPDATE tb_estacionamento SET saida = '" + dateTime + "' WHERE id = " + id;
     String sql2 = "UPDATE tb_carro SET estado = false WHERE id = " + id;
     try {
       Statement statement = ConnectionDb.getConnection().createStatement();
