@@ -10,9 +10,9 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
 public class ParkingService {
-  String dateTime = LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss"));
-  public void carEntrance(Parking parking) {
 
+  public void carEntrance(Parking parking) {
+    String dateTime = LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss"));
     String sql = "INSERT INTO tb_estacionamento (carroid, entrada, valorpago, permanencia)" +
         "VALUES ('" + parking.getCar_id() + "', '" +  dateTime +
         "', '" + parking.getAmountPaid() + "', '" + parking.getPermanence() +
@@ -35,7 +35,9 @@ public class ParkingService {
       Statement statement = ConnectionDb.getConnection().createStatement();
       ResultSet rs = statement.executeQuery(sql);
       while (rs.next()) {
-        System.out.println("Marca: " + rs.getString("marcacarro") +
+        System.out.println("ID: " + rs.getInt("id") +
+            "\tID do carro: " + rs.getInt("carroid") +
+            "\tMarca: " + rs.getString("marcacarro") +
             "\tDono: " + rs.getString("nomedono") +
             "\tPermanência: " + rs.getString("permanencia") +
             "\tValor pago: " + rs.getString("valorpago"));
@@ -60,6 +62,7 @@ public class ParkingService {
   }
 
   public void carDeparture(Integer id) {
+    String dateTime = LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss"));
     String sql =
         "UPDATE tb_estacionamento SET saida = '" + dateTime + "' WHERE id = " + id;
     String sql2 = "UPDATE tb_carro SET estado = false WHERE id = " + id;
